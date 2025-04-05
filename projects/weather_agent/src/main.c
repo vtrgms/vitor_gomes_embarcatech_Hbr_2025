@@ -9,9 +9,9 @@
 #include "ws2812.pio.h"
 
 // Definições
-#define WIFI_SSID "Fernando 2.4G"
-#define WIFI_PASS "orse27187"
-#define API_KEY "d1ff7fe5ae43dbd411cd88d8ddff7cca"
+#define WIFI_SSID "nome do wifi"
+#define WIFI_PASS "senha do wifi"
+#define API_KEY "key gerada no site da API openweathermap"
 #define GEO_SERVER "ip-api.com"
 #define GEO_PATH "/json"
 #define WEATHER_SERVER "api.openweathermap.org"
@@ -561,7 +561,6 @@ int main()
         }
         else
         {
-
             gpio_put(GREEN_LED_PIN, 0);
             gpio_put(BLUE_LED_PIN, 0);
             gpio_put(RED_LED_PIN, 1);
