@@ -35,16 +35,21 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(internal_temperature internal_temperature.c)
+add_executable(internal_temperature src/main.c)
 
-target_link_libraries(internal_temperature pico_stdlib hardware_adc)
+target_link_libraries(internal_temperature 
+pico_stdlib 
+hardware_adc
+hardware_i2c
+)
 
 # enable uart output, disable usb output
 pico_enable_stdio_uart(internal_temperature 1)
 pico_enable_stdio_usb(internal_temperature 1)
 
+# Add the standard include files to the build
+target_include_directories(countdown_interruptions PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/inc
+)
 # create map/bin/hex file etc.
 pico_add_extra_outputs(internal_temperature)
-
-# add url via pico_set_program_url
-

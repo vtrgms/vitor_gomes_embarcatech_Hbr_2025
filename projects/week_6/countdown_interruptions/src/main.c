@@ -2,7 +2,6 @@
 #include <string.h>
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
-#include "ssd1306_i2c.h"
 #include "ssd1306_i2c.c"
 
 #define I2C_PORT i2c1
@@ -20,10 +19,11 @@ static inline bool button_pressed(uint gpio)
 {
     if (!gpio_get(gpio))
     {
-        printf("Botão apertado");
-        sleep_ms(50);
-        if (!gpio_get(gpio))
-            return true;
+        while (!gpio_get(gpio))
+        {
+            sleep_ms(10);
+        }
+        return true;
     }
     return false;
 }
@@ -62,23 +62,8 @@ int main()
         {
             int countB = 0;
 
-            for (int digit = 9; digit >= 0; --digit)
+            for (int digit = 9; digit >= 0; digit--)
             {
-                if (button_pressed(PIN_BUTTON_A))
-                { // Se A for pressionado de novo, reinicia o loop
-                    printf("Botao apertado dnv");
-                    break;
-                }
-
-                memset(display_buffer, 0, area.buffer_length); // Limpa o buffer
-
-                char str[8];
-                sprintf(str, "%d", digit);
-                printf("será que foi?", str);
-                ssd1306_draw_string(display_buffer, 60, 28, str);
-
-                render_on_display(display_buffer, &area);
-
                 // Espera 1 s, contando B e reagindo a A
                 absolute_time_t start = get_absolute_time();
                 while (absolute_time_diff_us(start, get_absolute_time()) < 1000000)
@@ -86,27 +71,35 @@ int main()
                     if (button_pressed(PIN_BUTTON_B))
                     {
                         countB++;
-                        char count[8];
-                        sprintf(count, "%d", countB);
-                        printf(count);
                     }
                     if (button_pressed(PIN_BUTTON_A))
                     {
                         digit = 10; // força sair do for e reiniciar
+                        countB = 0;
                         break;
                     }
+                    memset(display_buffer, 0, area.buffer_length); // Limpa o buffer
+
+                    char str_counter[16], str_b_counter[16];
+                    snprintf(str_b_counter, sizeof(str_b_counter), "Botao B: %d", countB);
+                    snprintf(str_counter, sizeof(str_counter), "Contador: %d", digit);
+
+                    ssd1306_draw_string(display_buffer, 12, 40, str_counter);
+                    ssd1306_draw_string(display_buffer, 12, 10, str_b_counter);
+
+                    render_on_display(display_buffer, &area);
                 }
             }
 
             memset(display_buffer, 0, area.buffer_length);
-            char summary[5];
-            snprintf(summary, sizeof(summary), "%d", countB);
-            ssd1306_draw_string(display_buffer, 50, 28, summary);
+
+            char final[16];
+            snprintf(final, sizeof(final), "Apertou %dx", countB);
+            ssd1306_draw_string(display_buffer, 0, 28, final);
+
             render_on_display(display_buffer, &area);
-            sleep_ms(2000);
         }
         sleep_ms(10);
     }
-
     return 0;
 }

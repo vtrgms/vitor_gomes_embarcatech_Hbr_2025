@@ -37,15 +37,22 @@ pico_sdk_init()
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(joystick_display
-joystick_display.c
+src/main.c
 )
 
 pico_enable_stdio_uart(joystick_display 0)
 pico_enable_stdio_usb(joystick_display 1)
 
-target_link_libraries(joystick_display pico_stdlib hardware_adc)
+target_link_libraries(joystick_display 
+pico_stdlib 
+hardware_adc
+hardware_i2c
+)
+
+# Add the standard include files to the build
+target_include_directories(countdown_interruptions PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/inc
+)
 
 # create map/bin/hex file etc.
 pico_add_extra_outputs(joystick_display)
-
-# add url via pico_set_program_url
