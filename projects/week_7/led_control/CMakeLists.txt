@@ -28,29 +28,29 @@ set(PICO_BOARD pico_w CACHE STRING "Board type")
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(teste C CXX ASM)
+project(led_control C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(teste app/main.c )
+add_executable(led_control app/main.c )
 
-pico_set_program_name(teste "teste")
-pico_set_program_version(teste "0.1")
+pico_set_program_name(led_control "teste")
+pico_set_program_version(led_control "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(teste 0)
-pico_enable_stdio_usb(teste 1)
+pico_enable_stdio_uart(led_control 0)
+pico_enable_stdio_usb(led_control 1)
 
 # Add the standard library to the build
-target_link_libraries(teste
+target_link_libraries(led_control
         pico_stdlib
         pico_cyw43_arch_none)
 
 # Add the standard include files to the build
-target_include_directories(teste PRIVATE
+target_include_directories(led_control PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/app
         ${CMAKE_CURRENT_LIST_DIR}/drivers
@@ -58,5 +58,5 @@ target_include_directories(teste PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/hal
 )
 
-pico_add_extra_outputs(teste)
+pico_add_extra_outputs(led_control)
 

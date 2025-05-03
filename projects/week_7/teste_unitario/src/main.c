@@ -32,9 +32,14 @@ int main(void)
         temperature = adc_to_celsius(adc_test_val);
         if (check_temperature(27.0, temperature, 0.5))
         {
+            printf("Teste aprovado!\t");
             uint16_t adc_temp = adc_read();
             temperature = adc_to_celsius(adc_temp);
-            printf("temperatura: %.2f", temperature);
+            printf("Temperatura: %.2f\n", temperature);
+        }
+        else
+        {
+            printf("Teste não aprovado!\n");
         }
         sleep_ms(500);
     }
