@@ -13,24 +13,6 @@
 static uint8_t display_buffer[ssd1306_width * ssd1306_n_pages];
 static struct render_area area;
 
-void draw_pixel(int x, int y, bool on)
-{
-    if (x < 0 || x >= ssd1306_width || y < 0 || y >= ssd1306_height)
-        return;
-
-    int page = y / 8;
-    int bit = y % 8;
-
-    if (on)
-    {
-        display_buffer[x + page * ssd1306_width] |= (1 << bit);
-    }
-    else
-    {
-        display_buffer[x + page * ssd1306_width] &= ~(1 << bit);
-    }
-}
-
 void draw_circle(int x, int y)
 {
     // Desenha um ponto 3x3
@@ -38,7 +20,7 @@ void draw_circle(int x, int y)
     {
         for (int dy = -1; dy <= 1; dy++)
         {
-            draw_pixel(x + dx, y + dy, true);
+            ssd1306_set_pixel(display_buffer, x + dx, y + dy, true);
         }
     }
 }
